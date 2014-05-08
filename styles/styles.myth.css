@@ -17,20 +17,13 @@
   var-c10: #2b2b2b;
   var-w1: 1440px;
   var-w2: 970px;
+  var-w3: 768px;
 }
 
 /* Clearfix */
 .cf:after { clear: both; }
 .cf:before, .cf:after { content: ""; display: table; }
 .cf { *zoom: 1; }
-
-/* grid */
-.col-2 li { width: 425px; }
-.col-3 li { width: 270px; }
-.col-3.items-2 { padding-left: 170px; }
-.col-4 li { width: 207px; }
-.col-5 li { width: 170px; }
-.col-6 li { width: 130px; }
 
 .center {
   margin: 0 auto;
@@ -46,8 +39,45 @@
   margin-left: -0.1rem;
 }
 
+.bottom:before {
+  content: "";
+  display: inline-block;
+  vertical-align: bottom;
+  width: 0.1rem;
+  height: 100%;
+  margin-left: -0.1rem;
+}
+
+/* grid */
+/*
+.col-2 { margin-left: -60px; }
+.col-2 li { width: 425px; margin-left: 60px; }
+.col-3 { margin-left: -60px; }
+.col-3 li { width: 282px; margin-left: 60px; }
+.col-3 .margin { margin-left: 230px; }
+.col-4 { margin-left: -40px; }
+.col-4 li { width: 210px; margin-left: 40px; }
+.col-5 li { width: 170px; }
+.col-6 li { width: 130px; }
+*/
+.col-2 { margin-left: -5%; }
+.col-2 li { width: 45%; margin-left: 5%; }
+.col-3 { margin-left: -5%; }
+.col-3 li { width: 28%; margin-left: 5%; }
+.col-3 .margin { margin-left: 20%; }
+.col-4 { margin-left: -5%; }
+.col-4 li { width: 20%; margin-left: 5%;  }
+.col-5 li { width: 170px; }
+.col-6 { margin-left: -38px; }
+.col-6 li { width: 130px; margin-left: 38px; }
+.smartphones { margin-left: -50px; }
+.smartphones li { margin-left: 50px; }
+.tablets { margin-left: -85px; }
+.tablets li { margin-left: 85px; }
+
 body {
   background: white;
+  font-family: Montserrat;
 }
 
 .main-header {
@@ -57,6 +87,7 @@ body {
   left: 0;
   right: 0;
   background: white;
+  padding: 0 40px;
   margin-bottom: 8px;
   box-shadow: 8px 0 0 rgba(0,0,0,0.3);
   z-index: 100;
@@ -75,7 +106,6 @@ body {
 .header-wrapper {
   width: var(w2);
   margin: 0 auto;
-  padding: 0 40px;
 }
 
 .main-header h1 {
@@ -83,7 +113,7 @@ body {
   width: 175px;
   height: 39px;
   margin-top: 17px;
-  background: url("images/smadex-logo.png");
+  background: url("images/logo_smadex.png") no-repeat;
   font-size: 0;
 }
 
@@ -117,21 +147,22 @@ body {
   transition: all 0.3s ease;
 }
 
-.main-header nav ul.private li a {
-  border-radius: 3px;
+.main-header nav ul li a.button {
   padding: 7px 17px;
-  color: var(c2);
-  background-color: var(c3);
+  display: inline;
+  font-weight: normal;
+  border: 0;
 }
 
-/* Carousel */
+/* Carousel ------------------------------------------------------------------------- */
+
 .slideshow-wrapper {
   position: fixed;
   top: 70px;
   left: 0;
-  z-index: -1;
   width: 100%;
   background-color: var(c5);
+  z-index: -1;
 }
 
 .slideshow-wrapper:after {
@@ -156,6 +187,7 @@ body {
 }
 
 .slideshow .carousel li {
+  position: relative;
   width: var(w1);
   height: 430px;
   background: center no-repeat;
@@ -176,7 +208,12 @@ body {
 }
 
 .slideshow .text-wrapper {
-  display: inline-block;
+  position: absolute;
+  width: var(w3);
+  left: calc((var(w1)-var(w3))/2);
+  top: 160px;
+  z-index: 10;
+  transition: all 0.5s ease;
 }
 
 .slideshow h2 {
@@ -202,6 +239,7 @@ body {
   position: absolute;
   bottom: 32px;
   width: 100%;
+  z-index: 10;
 }
 
 .slideshow .slides-pagination li {
@@ -234,20 +272,22 @@ body {
   height: 46px;
   top: 183px;
   font-size: 0;
-  z-index: 100;
+  z-index: 10;
+  transition: opacity 0.5s ease;
 }
 
 .slideshow .slides-next {
-  right: 275px;
+  right: 235px;
   background: url(images/slide_next.png);
 }
 
 .slideshow .slides-prev {
-  left: 275px;
+  left: 235px;
   background: url(images/slide_prev.png);
 }
 
-/* Main content */
+/* Main content --------------------------------------------------------------------- */
+
 .main-content {
   margin-top: 500px;
   width: 100%;
@@ -283,20 +323,11 @@ body {
 
 .main-content ul li {
   float: left;
-  margin-left: 40px;
+  margin-bottom: 40px;
 }
 
-.main-content ul.col-4 li {
-  margin-left: 20px;
+.main-content .col-4 li {
   text-align: left;
-}
-
-.main-content ul li:first-child {
-  margin-left: 0;
-}
-
-.main-content ul + ul {
-  margin-top: 40px;
 }
 
 .main-content a {
@@ -417,11 +448,12 @@ body {
 }
 
 .call-to-action-wrapper {
-  margin-top: 100px;
+  margin-top: 50px;
   text-align: center;
 }
 
 .button {
+  position: relative;
   padding: 20px 25px;
   border-radius: 5px;
   font-size: 20px;
@@ -432,6 +464,23 @@ body {
   display: inline-block;
 }
 
+.button:after {
+  position: absolute;
+  content: "";
+  background: #000;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  border-radius: 5px;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.button:hover:after {
+  opacity: 0.2;
+}
+
 .button.light {
   background: var(c3);
   color: var(c2);
@@ -439,32 +488,58 @@ body {
 
 .logos li {
   position: relative;
+  min-width: 240px;
+  height: 160px;
+  background: no-repeat center;
 }
 
 .logos li a {
+  position: relative;
+  height: 100%;
   display: block;
-}
-
-.logos li a:hover img:last-child {
-  opacity: 1;
-}
-
-.logos li img:last-child {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
+  background: no-repeat center;
   opacity: 0;
+  color: var(c9);
   transition: opacity 0.5s ease;
+}
+
+.logos li.mopub {
+  background-image: url(images/logo_mopub_off.png);
+}
+.logos li.mopub a {
+  background-image: url(images/logo_mopub.png);
+}
+.logos li.flurry {
+  background-image: url(images/logo_flurry_off.png);
+}
+.logos li.flurry a {
+  background-image: url(images/logo_flurry.png);
+}
+.logos li.nexage {
+  background-image: url(images/logo_nexage_off.png);
+}
+.logos li.nexage a {
+  background-image: url(images/logo_nexage.png);
+}
+.logos li.inneractive {
+  background-image: url(images/logo_inneractive_off.png);
+}
+.logos li.inneractive a {
+  background-image: url(images/logo_inneractive.png);
+}
+.logos li.doubleclick {
+  background-image: url(images/logo_doubleclick_off.png);
+}
+.logos li.doubleclick a {
+  background-image: url(images/logo_doubleclick.png);
+}
+
+.logos li:hover a {
+  opacity: 1;
 }
 
 .main-content ul.col-auto li {
   margin-left: 0;
-}
-
-.main-content ul.col-6 li {
-  margin-left: 23px;
 }
 
 .main-content h5 {
@@ -488,9 +563,12 @@ body {
   border-top: 2px solid var(c8);
 }
 
+/* Footer ---------------------------------------------------------------------------- */
+
 .main-footer {
   background: var(c10);
   color: var(c9);
+  padding: 40px;
 }
 
 .main-footer .content-wrapper {
@@ -499,6 +577,10 @@ body {
 
 .main-footer li {
   float: left;
+}
+
+.main-footer li li {
+  float: none;
 }
 
 .main-footer h4 {
@@ -529,4 +611,212 @@ body {
   line-height: 20px;
   font-weight: lighter;
   color: var(c7);
+}
+
+
+/* Responsive ----------------------------------------------------------------------- */
+
+@media only screen and (max-width : 1400px) {
+  .slideshow {
+    width: 100%;
+  }
+
+  .slideshow .carousel li {
+    width: 100%;
+  }
+
+  .slideshow .text-wrapper {
+    width: 50%;
+    left: 25%;
+  }
+
+  .slideshow .slides-next {
+    right: 15%;
+  }
+
+  .slideshow .slides-prev {
+    left: 15%;
+  }
+}
+
+@media only screen and (max-width : 1050px) {
+  .header-wrapper {
+    width: 100%
+  }
+
+  .slideshow {
+    width: 100%;
+  }
+
+  .slideshow .text-wrapper {
+    width: 70%;
+    left: 15%;
+  }
+
+  .slideshow .slides-next {
+    right: 10%;
+  }
+
+  .slideshow .slides-prev {
+    left: 10%;
+  }
+
+  .content-wrapper {
+    width: 100%;
+  }
+
+  .content-wrapper .smartphones {
+    margin-left: -5%;
+  }
+
+  .content-wrapper .smartphones li {
+    width: 20%;
+    margin: 0 0 30px 5%;
+  }
+
+  .content-wrapper .smartphones li img {
+    width: 100%;
+  }
+
+  .content-wrapper .tablets {
+    margin-left: -5%;
+  }
+
+  .content-wrapper .tablets li {
+    width: 28%;
+    margin: 0 0 30px 5%;
+  }
+
+  .content-wrapper .tablets li img {
+    width: 100%;
+  }
+}
+
+@media only screen and (max-width : 890px) {
+  .logos .content-wrapper .col-3 {
+    margin-left: 0;
+  }
+
+  .logos .content-wrapper .col-3 li {
+    width: 50%;
+    margin: 0;
+  }
+}
+
+@media only screen and (max-width : 768px) {
+  .main-header {
+    height: 50px;
+    padding: 0 40px;
+  }
+
+  .main-header:after {
+    top: 50px;
+  }
+
+  .header-wrapper {
+    width: 100%;
+    padding: 0;
+  }
+
+  .main-header h1 {
+    width: 124px;
+    height: 28px;
+    margin-top: 11px;
+    background-image: url(images/tablet/logo_smadex.png);
+  }
+
+  .main-header nav {
+    width: 50px;
+    height: 50px;
+    background: url(images/menu.png) no-repeat center;
+    margin-right: -14px;
+    cursor: pointer;
+  }
+
+  .main-header nav ul {
+    display: none;
+  }
+
+  /* Carousel */
+  .slideshow-wrapper {
+    top: 50px;
+  }
+
+  .slideshow .carousel li {
+    width: 100%;
+    height: 350px;
+  }
+
+  .slideshow .text-wrapper {
+    top: 80px;
+    width: 80%;
+    left: 10%;
+  }
+
+  .slideshow .slides-next,
+  .slideshow .slides-prev {
+    opacity: 0;
+  }
+
+  /* Main content */
+  .main-content {
+    margin-top: 400px;
+  }
+
+  .content-wrapper {
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  .content-wrapper .col-2 li {
+    float: none;
+    width: 95%;
+    margin: 0 0 30px 5%;
+  }
+
+  .content-wrapper .col-2 li:last-child {
+    margin-bottom: 0;
+  }
+
+  .content-wrapper .col-3 li,
+  .content-wrapper .col-4 li {
+    width: 45%;
+    margin: 0 0 30px 5%;
+  }
+
+  .content-wrapper .col-2 li li {
+     margin: 0;
+  }
+
+  .main-footer .links {
+    margin-top: 45px;
+  }
+
+  @media only screen and (max-width : 570px) {
+    .logos .content-wrapper .col-3 {
+      margin-left: 0;
+    }
+
+    .logos .content-wrapper .col-3 li {
+      width: 100%;
+    }
+  }
+
+  @media only screen and (max-width : 480px) {
+    .content-wrapper .col-3 li,
+    .content-wrapper .col-4 li {
+      float: none;
+      text-align: center;
+      width: 95%;
+      margin: 0 0 30px 5%;
+    }
+
+    .main-content h4 {
+      margin: 0 auto 15px;
+    }
+
+    .main-content h4.icon:before {
+      background-position: center;
+    }
+  }
 }

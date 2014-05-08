@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>Smadex</title>
   <link rel="stylesheet" href="styles/styles.css">
+  <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
 </head>
 <body>
   <header class="main-header">
@@ -16,29 +17,29 @@
           <li><a href="#product">About</a></li>
           <li><a href="#product">Contact</a></li>
         </ul>
-        <ul class="private">
-          <li><a href="#login">Login</a></li>
+        <ul>
+          <li><a href="#login" class="button light">Login</a></li>
         </ul>
       </nav>
     </div>
   </header>
 
   <section class="slideshow-wrapper">
-    <div class="slideshow" data-pagination="true" data-loop="false" data-transition="crossfade">
+    <div class="slideshow" data-pagination="true" data-loop="true" data-transition="crossfade">
       <ul class="carousel">
-        <li class="slide middle first">
+        <li class="slide first">
           <div class="text-wrapper">
             <h2>Smadex’s Mobile DSP</h2>
             <p>GET RESULTS FROM PROGRAMATIC BUYING</p>
           </div>
         </li>
-        <li class="slide middle second">
+        <li class="slide second">
           <div class="text-wrapper">
             <h2>Smadex’s Mobile DSP</h2>
             <p>GET RESULTS FROM PROGRAMATIC BUYING</p>
           </div>
         </li>
-        <li class="slide middle third">
+        <li class="slide third">
           <div class="text-wrapper">
             <h2>Smadex’s Mobile DSP</h2>
             <p>GET RESULTS FROM PROGRAMATIC BUYING</p>
@@ -109,8 +110,6 @@
             <h4 class="icon icon-device">Device OS</h4>
             <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore..</p>
           </li>
-        </ul>
-        <ul class="col-3 cf">
           <li>
             <h4 class="icon icon-apps">Choose Apps</h4>
             <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore..</p>
@@ -135,16 +134,17 @@
         <h2>DEVICES AND FORMATS</h2>
         <h3>RICH MEDIA, VIDEO, NATIVE ACROSS PHONES AND TABLETS</h3>
         <h4>Smartphones</h4>
-        <ul class="cf">
+        <ul class="cf smartphones">
           <li><img src="styles/images/smartphone_1.png" alt="Smartphone 1"></li>
           <li><img src="styles/images/smartphone_2.png" alt="Smartphone 2"></li>
           <li><img src="styles/images/smartphone_3.png" alt="Smartphone 3"></li>
-          <li><img src="styles/images/smartphone_4.png" alt="Smartphone 4"></li>
+          <li class="bottom"><img src="styles/images/smartphone_4.png" alt="Smartphone 4"></li>
         </ul>
-        <ul class="cf">
+        <h4>Tablets</h4>
+        <ul class="cf tablets">
           <li><img src="styles/images/tablet_1.png" alt="Tablet 1"></li>
           <li><img src="styles/images/tablet_2.png" alt="Tablet 2"></li>
-          <li><img src="styles/images/tablet_3.png" alt="Tablet 3"></li>
+          <li class="bottom"><img src="styles/images/tablet_3.png" alt="Tablet 3"></li>
         </ul>
         <div class="call-to-action-wrapper">
           <a href="#" class="button light">Watch the Media Kit</a>
@@ -157,37 +157,20 @@
         <h2>SMADEX’S PARTNERS</h2>
         <h3>Access to thousands of curated and premium apps worldwide</h3>
         <ul class="col-3 cf">
-          <li>
-            <a href="http://www.mopub.com/" target="_blank">
-              <img src="styles/images/logo_mopub_off.png" alt="logo mopub off">
-              <img src="styles/images/logo_mopub.png" alt="logo mopub">
-            </a>
+          <li class="mopub">
+            <a href="http://www.mopub.com/" target="_blank">mopub</a>
           </li>
-          <li>
-            <a href="http://www.flurry.com/" target="_blank">
-              <img src="styles/images/logo_flurry_off.png" alt="logo flurry off">
-              <img src="styles/images/logo_flurry.png" alt="logo flurry">
-            </a>
+          <li class="flurry">
+            <a href="http://www.flurry.com/" target="_blank">flurry</a>
           </li>
-          <li>
-            <a href="http://www.nexage.com/" target="_blank">
-              <img src="styles/images/logo_nexage_off.png" alt="logo nexage off">
-              <img src="styles/images/logo_nexage.png" alt="logo nexage">
-            </a>
+          <li class="nexage">
+            <a class="nexage" href="http://www.nexage.com/" target="_blank">nexage</a>
           </li>
-        </ul>
-        <ul class="col-3 items-2 cf">
-          <li>
-            <a href="http://inner-active.com/" target="_blank">
-              <img src="styles/images/logo_inneractive_off.png" alt="logo inneractive off">
-              <img src="styles/images/logo_inneractive.png" alt="logo inneractive">
-            </a>
+          <li class="inneractive margin">
+            <a href="http://inner-active.com/" target="_blank">inneractive</a>
           </li>
-          <li>
-            <a href="http://www.google.com/doubleclick/" target="_blank">
-              <img src="styles/images/logo_doubleclick_off.png" alt="logo doubleclick_off">
-              <img src="styles/images/logo_doubleclick.png" alt="logo doubleclick">
-            </a>
+          <li class="doubleclick">
+            <a href="http://www.google.com/doubleclick/" target="_blank">doubleclick</a>
           </li>
         </ul>
       </div>
@@ -224,7 +207,6 @@
             </a>
           </li>
         </ul>
-
         <ul class="col-6 cf">
           <li>
             <img src="styles/images/team_jordi.png" alt="Jordi de los Pinos">
@@ -260,8 +242,6 @@
             <h5>Joan Roca</h5>
             <h6>Tech Team</h6>
           </li>
-        </ul>
-        <ul class="col-6 cf">
           <li>
             <img src="styles/images/team_other.png" alt="Marta Masachs">
             <h5>Marta Masachs</h5>
