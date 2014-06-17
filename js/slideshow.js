@@ -1,6 +1,396 @@
-/*!
- * @name        jQuery Slideshow
- * @author      Matt Hinchliffe <http://i-like-robots.github.com/jQuery-Slideshow/>
- * @modified    Monday, March 17th, 2014, 09:07:59
- * @version     1.7.0
- */!function(a,b){"use strict";function c(b,c){return this.target=b,this.$target=a(b),this.opts=a.extend({},d,c,this.$target.data()),this.$carousel=this.$target.children(this.opts.carousel),this.$items=this.$carousel.children(this.opts.items),this.count=this.$items.length,this.scrollable=!0,this.count>1&&this._init(),this}var d={carousel:".carousel",items:".slide",slideWidth:!1,jumpQueue:!0,offset:1,skip:!0,pagination:!0,auto:6e3,autostop:!0,hoverPause:!1,loop:!1,nextText:"Next",previousText:"Previous",transition:"scroll",speed:600,easing:"swing",visible:1,onupdate:!1,oncomplete:!1};c.prototype._init=function(){var b=this;if(this.$wrapper=this.$carousel.wrap('<div style="position:relative;overflow:hidden;">').parent(),this.opts.pagination){this.$pagination=a('<ul class="slides-pagination">');for(var c=0,d=this.count;d>c;c++)this.$pagination.append('<li><a href="#" data-slides="'+c+'">'+(c+1)+"</a></li>");this.$target.append(this.$pagination)}this.opts.skip&&(this.$prev=a('<a href="#" class="slides-prev" data-slides="previous">'+this.opts.previousText+"</a>"),this.$next=a('<a href="#" class="slides-next" data-slides="next">'+this.opts.nextText+"</a>"),this.$target.append(this.$next,this.$prev)),(this.opts.pagination||this.opts.skip)&&this.$target.on("click.slides","[data-slides]",function(c){var d=a(this);c.preventDefault(),d.hasClass("disabled")||b.to(d.data("slides"),!0)}),this.redraw(),this.opts.auto&&(this.opts.hoverPause&&this.$target.hover(function(){b.stopped||b.pause()},function(){b.paused&&b.play()}),this.play())},c.prototype._oncomplete=function(){this.current=this.future,this.opts.pagination&&this.$pagination.children().removeClass("selected").slice(this.current,this.current+this.opts.visible).addClass("selected"),this.opts.skip&&(this.hasNext()||this.opts.loop?this.$next.removeClass("disabled"):this.$next.addClass("disabled"),this.hasPrevious()||this.opts.loop?this.$prev.removeClass("disabled"):this.$prev.addClass("disabled")),this.opts.oncomplete&&this.opts.oncomplete.call(this,this.current)},c.prototype.hasNext=function(){return this.scrollable&&this.current<this.count-1},c.prototype.hasPrevious=function(){return this.current>0},c.prototype.next=function(){this.to(this.current+1)},c.prototype.previous=function(){this.to(this.current-1)},c.prototype.to=function(a,b){if(this.opts.jumpQueue)this.$items.stop(!0,!0);else if(this.$items.queue("fx").length)return;"next"===a?a=this.current+1:"previous"===a&&(a=this.current-1),"number"!=typeof a&&(a=parseInt(a,10)),a>=this.count?a=this.opts.loop?0:this.count-1:0>a&&(a=this.opts.loop?this.count-1:0),b&&!this.stopped&&(this.opts.autostop?this.stop():this.paused||this.play()),a!==this.current&&(this.future=a,this.transition.execute.call(this),this.opts.onupdate&&this.opts.onupdate.call(this,a))},c.prototype.redraw=function(a){this.transition&&this.transition.teardown.call(this),a&&(this.opts.transition=a),this.current=b,this.transition=this.transitions[this.opts.transition].call(this),this.to(this.opts.offset-1)},c.prototype.play=function(){var a=this;clearInterval(this.timeout),this.paused=this.stopped=!1,this.timeout=setInterval(function(){a.to("next")},this.opts.auto)},c.prototype.pause=function(){this.paused=!0,clearInterval(this.timeout)},c.prototype.stop=function(){this.stopped=!0,this.paused=!1,clearInterval(this.timeout)},c.prototype.transitions={crossfade:function(){var a=this;return this.$items.filter(function(b){return b!==a.opts.offset-1}).css("display","none"),this.execute=function(){var b=this.$items.eq(this.future),c=this.$items.eq(this.current).css({position:"absolute",left:0,top:0});b.fadeIn(this.opts.speed,this.opts.easing,function(){a._oncomplete.call(a)}),c.fadeOut(this.opts.speed,this.opts.easing,function(){c.css("position","")})},this.teardown=function(){this.$items.stop(!0,!0).removeAttr("style")},this},scroll:function(){var a=this,b=0;this.$items.css({"float":"left",width:this.opts.slideWidth});for(var c=0;c<this.count;c++)b+=this.$items.eq(c).outerWidth(!0);return this.$carousel.css({minWidth:b}),this.execute=function(){var b=this.$items.eq(this.future).position().left+this.$wrapper.scrollLeft(),c=this.$carousel.width()-this.$wrapper.width(),d=b>=c;(!d||this.scrollable)&&this.$wrapper.animate({scrollLeft:d?c:b},this.opts.speed,this.opts.easing,function(){a._oncomplete.call(a)}),this.scrollable=!d},this.teardown=function(){this.scrollable=!0,this.$items.removeAttr("style"),this.$carousel.stop(!0,!0).removeAttr("style")},this}},a.fn.slides=function(b){return this.each(function(){a.data(this,"slides")||a.data(this,"slides",new c(this,b))})},"function"==typeof define&&define.amd?define(function(){return c}):"undefined"!=typeof module&&module.exports&&(module.exports=c)}(jQuery);
+(function( $, undefined ) {
+
+    'use strict';
+
+    var defaults = {
+
+        // Setup
+        carousel: '.carousel',      // Selector for the carousel element.
+        items: '.slide',            // Selector for carousel items.
+        slideWidth: false,          // Set a fixed width for each slide.
+        jumpQueue: true,            // Allow .to() method while animations are queued.
+        offset: 1,                  // Starting slide.
+
+        // Controls
+        skip: true,                 // Render next/previous skip buttons.
+        pagination: true,           // Render pagination.
+        auto: 6000,                 // Autoplay timeout in milliseconds. Set to false for no autoplay.
+        autostop: true,             // Stop autoplay when user manually changes slide.
+        hoverPause: false,          // Pause autoplay on hover.
+        loop: false,                // Allow slideshow to loop.
+        nextText: 'Next',           // Text to display on next skip button
+        previousText: 'Previous',   // Text to display on previous skip button
+
+        // Transitions
+        transition: 'scroll',       // Specify transition.
+        speed: 600,                 // Animation speed between slides in milliseconds.
+        easing: 'swing',            // Animation easing between slides.
+        visible: 1,                 // Approximate number of slides visible (scroll transition only).
+
+        // Callbacks
+        onupdate: false,            // A callback function to execute on slide change.
+        oncomplete: false           // A callback function to execute on slide transition complete.
+    };
+
+    function Slides(target, options) {
+        this.target = target;
+        this.$target = $(target);
+        this.opts = $.extend({}, defaults, options, this.$target.data());
+        this.$carousel = this.$target.children(this.opts.carousel);
+        this.$items = this.$carousel.children(this.opts.items);
+        this.count = this.$items.length;
+        this.scrollable = true;
+
+        if ( this.count > 1 ) {
+            this._init();
+        }
+
+        return this;
+    }
+
+    /**
+     * Init
+     * @private
+     */
+    Slides.prototype._init = function() {
+        var self = this;
+
+        // $wrapper is a document fragment, not the new DOM reference
+        this.$wrapper = this.$carousel.wrap('<div style="position:relative;overflow:hidden;">').parent();
+
+        // Create Contronls wrapper
+        this.$controls = $('<div class="slides-controls">');
+        this.$target.prepend(this.$controls);
+
+        // Create pagination
+        if ( this.opts.pagination ) {
+            this.$pagination = $('<ul class="slides-pagination">');
+
+            for ( var i = 0, len = this.count; i < len; i++ ) {
+                this.$pagination.append('<li><a href="#" data-slides="' + i + '">' + (i+1) + '</a></li>');
+            }
+
+            this.$controls.append(this.$pagination);
+        }
+
+        // Create skip links
+        if ( this.opts.skip ) {
+            this.$prev = $('<a href="#" class="slides-prev" data-slides="previous">' + this.opts.previousText + '</a>');
+            this.$next = $('<a href="#" class="slides-next" data-slides="next">' + this.opts.nextText + '</a>');
+            this.$controls.append(this.$next, this.$prev);
+        }
+
+        // Controls
+        if ( this.opts.pagination || this.opts.skip ) {
+            this.$target.on('click.slides', '[data-slides]', function( e ) {
+                var $this = $(this);
+
+                e.preventDefault();
+
+                if ( ! $this.hasClass('disabled') ) {
+                    self.to($this.data('slides'), true);
+                }
+            });
+        }
+
+        this.redraw();
+
+        // Autoplay
+        if ( this.opts.auto ) {
+            if ( this.opts.hoverPause ) {
+                this.$target.hover(function() {
+                    if ( ! self.stopped ) {
+                        self.pause();
+                    }
+                }, function() {
+                    if ( self.paused ) {
+                        self.play();
+                    }
+                });
+            }
+
+            this.play();
+        }
+    };
+
+    /**
+     * On Complete
+     * @description Update controls and perform callbacks on transition complete.
+     * @private
+     */
+    Slides.prototype._oncomplete = function() {
+
+        this.current = this.future;
+
+        // Highlight current item within pagination
+        if ( this.opts.pagination ) {
+            this.$pagination.children()
+                .removeClass('selected')
+                .slice(this.current, this.current + this.opts.visible)
+                .addClass('selected');
+        }
+
+        // Disable skip buttons when not looping
+        if ( this.opts.skip ) {
+            if ( ! this.hasNext() && ! this.opts.loop ) {
+                this.$next.addClass('disabled');
+            }
+            else {
+                this.$next.removeClass('disabled');
+            }
+
+            if ( ! this.hasPrevious() && ! this.opts.loop ) {
+                this.$prev.addClass('disabled');
+            }
+            else {
+                this.$prev.removeClass('disabled');
+            }
+        }
+
+        if ( this.opts.oncomplete ) {
+            this.opts.oncomplete.call(this, this.current);
+        }
+    };
+
+    /**
+     * Has next
+     * @description Are there any slides after current item or can the carousel be scrolled any further (ignores loop).
+     * @returns {boolean}
+     */
+    Slides.prototype.hasNext = function() {
+        return this.scrollable && this.current < (this.count - 1);
+    };
+
+    /**
+     * Has previous
+     * @description Are there any slides previous to current item (ignores loop).
+     * @returns {boolean}
+     */
+    Slides.prototype.hasPrevious = function() {
+        return this.current > 0;
+    };
+
+    /**
+     * Next
+     */
+    Slides.prototype.next = function() {
+        this.to(this.current + 1);
+    };
+
+    /**
+     * Previous
+     */
+    Slides.prototype.previous = function() {
+        this.to(this.current - 1);
+    };
+
+    /**
+     * Go to slide
+     * @param {integer} x
+     * @param {boolean} user
+     */
+    Slides.prototype.to = function( x, user ) {
+
+        // Allow while animating?
+        // <http://jsperf.com/animated-pseudo-selector/3>
+        if ( this.opts.jumpQueue ) {
+            this.$items.stop(true, true);
+        }
+        else if ( this.$items.queue('fx').length ) {
+            return;
+        }
+
+        // Shortcuts
+        if ( x === 'next' ) {
+            x = this.current + 1;
+        }
+        else if ( x === 'previous' ) {
+            x = this.current - 1;
+        }
+
+        if ( typeof x !== 'number' ) {
+            x = parseInt(x, 10);
+        }
+
+        // Loop
+        if ( x >= this.count ) {
+            x = this.opts.loop ? 0 : this.count - 1;
+        }
+        else if ( x < 0 ) {
+            x = this.opts.loop ? this.count - 1 : 0;
+        }
+
+        // Stop or reset autoplay
+        if ( user && ! this.stopped ) {
+            if ( this.opts.autostop ) {
+                this.stop();
+            }
+            else if ( ! this.paused ) {
+                this.play();
+            }
+        }
+
+        // Change slide if different or not yet run
+        if ( x !== this.current ) {
+            this.future = x;
+            this.transition.execute.call(this);
+
+            if ( this.opts.onupdate ) {
+                this.opts.onupdate.call(this, x);
+            }
+        }
+    };
+
+    /**
+     * Redraw the carousel
+     * @param {string} transition
+     */
+    Slides.prototype.redraw = function( transition ) {
+        if ( this.transition ) {
+            this.transition.teardown.call(this);
+        }
+
+        if ( transition ) {
+            this.opts.transition = transition;
+        }
+
+        this.current = undefined;
+        this.transition = this.transitions[this.opts.transition].call(this);
+        this.to(this.opts.offset - 1);
+    };
+
+    /**
+     * Start autoplay
+     */
+    Slides.prototype.play = function() {
+        var self = this;
+
+        clearInterval(this.timeout);
+        this.paused = this.stopped = false;
+
+        this.timeout = setInterval(function() {
+            self.to('next');
+        }, this.opts.auto);
+    };
+
+    /**
+     * Pause autoplay
+     */
+    Slides.prototype.pause = function() {
+        this.paused = true;
+        clearInterval(this.timeout);
+    };
+
+    /**
+     * Stop (and clear) autoplay
+     */
+    Slides.prototype.stop = function() {
+        this.stopped = true;
+        this.paused = false;
+        clearInterval(this.timeout);
+    };
+
+    /**
+     * Transitions
+     */
+    Slides.prototype.transitions = {
+
+        crossfade: function() {
+            var self = this;
+
+            this.$items
+                .filter(function(i) {
+                    return i !== (self.opts.offset - 1);
+                })
+                .css('display', 'none');
+
+            this.execute = function() {
+                var $next = this.$items.eq(this.future);
+                var $current = this.$items.eq(this.current).css({
+                    position: 'absolute',
+                    left: 0,
+                    top: 0
+                });
+
+                $next.fadeIn(this.opts.speed, this.opts.easing, function() {
+                    self._oncomplete.call(self);
+                });
+
+                $current.fadeOut(this.opts.speed, this.opts.easing, function() {
+                    $current.css('position', '');
+                });
+            };
+
+            this.teardown = function() {
+                this.$items.stop(true, true).removeAttr('style');
+            };
+
+            return this;
+        },
+
+        // Scroll
+        scroll: function() {
+            var self = this;
+            var carouselWidth = 0;
+
+            this.$items.css({
+                'float': 'left',
+                'width': this.opts.slideWidth
+            });
+
+            for ( var i = 0; i < this.count; i++ ) {
+                carouselWidth+= this.$items.eq(i).outerWidth(true);
+            }
+
+            // setting the `width` property does not work on iOS 4
+            this.$carousel.css({
+                'minWidth': carouselWidth
+            });
+
+            this.execute = function() {
+                var scroll = this.$items.eq(this.future).position().left + this.$wrapper.scrollLeft();
+                var maxScroll = this.$carousel.width() - this.$wrapper.width();
+                var limitScroll = scroll >= maxScroll;
+
+                if ( ! limitScroll || this.scrollable ) {
+                    // Using scroll rather than positioning prevents redraws
+                    this.$wrapper.animate({
+                        scrollLeft: limitScroll ? maxScroll : scroll
+                    }, this.opts.speed, this.opts.easing, function() {
+                        self._oncomplete.call(self);
+                    });
+                }
+
+                this.scrollable = ! limitScroll;
+            };
+
+            this.teardown = function() {
+                this.scrollable = true;
+                this.$items.removeAttr('style');
+                this.$carousel.stop(true, true).removeAttr('style');
+            };
+
+            return this;
+        }
+    };
+
+    // jQuery plugin wrapper
+    $.fn.slides = function( options ) {
+        return this.each(function() {
+            if ( ! $.data(this, 'slides') ) {
+                $.data(this, 'slides', new Slides(this, options));
+            }
+        });
+    };
+
+    // AMD and CommonJS module compatibility
+    if ( typeof define === 'function' && define.amd ){
+        define(function() {
+            return Slides;
+        });
+    }
+    else if ( typeof module !== 'undefined' && module.exports ) {
+        module.exports = Slides;
+    }
+
+})(jQuery);
